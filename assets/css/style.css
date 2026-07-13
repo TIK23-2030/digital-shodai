@@ -1,0 +1,1086 @@
+*{box-sizing:border-box}
+:root{
+  --sky-1:#59c9f2;
+  --sky-2:#bcecff;
+  --sky-3:#fff5bf;
+  --ink:#24566f;
+  --muted:#648498;
+  --card:rgba(255,255,255,.72);
+  --card-strong:rgba(255,255,255,.84);
+  --line:rgba(255,255,255,.68);
+  --yellow:#ffbf2f;
+  --yellow-deep:#f09a00;
+  --blue:#4abce8;
+  --pink:#ff8fa9;
+  --green:#58b67a;
+  --shadow:0 16px 40px rgba(31,113,151,.18)
+}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+  color:var(--ink);
+  background:linear-gradient(180deg,var(--sky-1) 0%,var(--sky-2) 56%,var(--sky-3) 100%);
+  background-attachment:fixed;
+  transition:background .5s ease,color .5s ease;
+  overflow-x:hidden
+}
+body.theme-evening{
+  --sky-1:#ff9f86;
+  --sky-2:#ffd6a6;
+  --sky-3:#fff3bf;
+  --ink:#5a4566
+}
+body.theme-night{
+  --sky-1:#112b5e;
+  --sky-2:#284a82;
+  --sky-3:#5f75a7;
+  --ink:#edf7ff;
+  --muted:#c5d8ee;
+  --card:rgba(20,44,84,.58);
+  --card-strong:rgba(28,54,96,.72);
+  --line:rgba(255,255,255,.22);
+  --shadow:0 16px 40px rgba(0,0,35,.28)
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+.paper-texture{
+  position:fixed;inset:0;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E")
+}
+.sky-decor{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.cloud{
+  position:absolute;
+  color:rgba(255,255,255,.72);
+  font-size:70px;
+  filter:blur(.2px) drop-shadow(0 6px 10px rgba(36,86,111,.08));
+  animation:cloudDrift linear infinite
+}
+.cloud-1{top:70px;left:-150px;animation-duration:42s}
+.cloud-2{top:220px;left:-220px;font-size:52px;animation-duration:58s;animation-delay:-18s}
+.cloud-3{top:360px;left:-180px;font-size:40px;animation-duration:49s;animation-delay:-31s}
+@keyframes cloudDrift{to{transform:translateX(calc(100vw + 330px))}}
+.stars{display:none}
+body.theme-night .cloud{color:rgba(214,231,255,.22)}
+body.theme-night .stars{display:block;position:absolute;inset:0;color:#fff8c6}
+body.theme-night .stars span{position:absolute;animation:twinkle 2.8s ease-in-out infinite}
+body.theme-night .stars span:nth-child(1){left:12%;top:12%}
+body.theme-night .stars span:nth-child(2){left:32%;top:22%;animation-delay:.8s}
+body.theme-night .stars span:nth-child(3){left:61%;top:11%;animation-delay:1.3s}
+body.theme-night .stars span:nth-child(4){left:78%;top:28%;animation-delay:.3s}
+body.theme-night .stars span:nth-child(5){left:88%;top:9%;animation-delay:1.8s}
+@keyframes twinkle{50%{opacity:.3;transform:scale(.72)}}
+
+
+.app{position:relative;z-index:1;width:min(720px,94%);margin:auto;padding:28px 0 70px}
+.hero{display:flex;justify-content:space-between;align-items:center;padding:10px 6px 20px;color:white;text-shadow:0 3px 12px rgba(25,81,112,.22)}
+.brand{margin:0;text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:900}
+h1{margin:.2em 0 .1em;font-size:clamp(34px,7vw,52px);font-weight:900;letter-spacing:.02em}
+h2{margin:.2em 0;font-size:22px}
+.subtitle{margin:0;font-weight:700}
+
+.tabs{
+  position:sticky;top:8px;z-index:6;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:7px;
+  padding:8px;background:rgba(255,255,255,.28);backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.48);border-radius:20px;box-shadow:var(--shadow)
+}
+.tab{
+  border:1px solid transparent;border-radius:14px;padding:11px 4px;
+  background:rgba(255,255,255,.18);color:var(--ink);font-weight:900
+}
+.tab.is-active{background:rgba(255,255,255,.72);border-color:rgba(255,255,255,.78);box-shadow:0 6px 16px rgba(33,118,157,.14)}
+body.theme-night .tab{color:#eef7ff}
+body.theme-night .tab.is-active{background:rgba(255,255,255,.14)}
+
+.view{display:none}.view.is-active{display:block}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:28px;
+  padding:22px;margin-top:18px;box-shadow:var(--shadow);backdrop-filter:blur(18px)
+}
+.timer-card{text-align:center}
+.small-label{margin:0;color:var(--muted);font-size:13px;font-weight:900;letter-spacing:.08em}
+.today-total{margin:12px 0 4px;font-size:72px;line-height:1;color:var(--yellow-deep);font-weight:900}
+.today-total small{font-size:20px;margin-left:5px}
+ .timer{
+  margin:18px 0;
+  min-height:auto;
+  display:grid;
+  place-items:center;
+  font-size:32px;
+  font-weight:900;
+  font-variant-numeric:tabular-nums;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  padding:0;
+}
+.timer-actions,.quick-add{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.quick-add{margin-top:12px}
+.button,.quick-add button{
+  border:1px solid rgba(255,255,255,.62);border-radius:999px;padding:12px 18px;
+  font-weight:900;transition:transform .18s ease,background .18s ease;
+  backdrop-filter:blur(12px)
+}
+.button:hover,.quick-add button:hover{transform:translateY(-2px)}
+.primary{background:rgba(255,191,47,.78);color:white}
+.pale{background:rgba(111,210,246,.52);color:var(--ink)}
+.rose{background:rgba(255,143,169,.68);color:white}
+.quick-add button{background:rgba(255,255,255,.42);color:var(--ink)}
+body.theme-night .pale,body.theme-night .quick-add button{color:#eef7ff}
+.full{width:100%;margin-top:10px}
+
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mini-card{text-align:center}
+.mini-card span{display:block;color:var(--muted);font-size:13px;font-weight:800}
+.mini-card strong{display:block;margin-top:8px;font-size:26px}
+.flame-mark{
+  display:inline-block!important;width:16px;height:22px;margin-right:7px;
+  background:linear-gradient(#ffb13b,#ff6b5c);
+  clip-path:polygon(50% 0,68% 27%,88% 49%,82% 78%,62% 100%,36% 96%,14% 73%,18% 45%,36% 61%,37% 26%);
+  vertical-align:-4px
+}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.badge{padding:7px 11px;border-radius:999px;background:rgba(255,244,190,.68);color:var(--yellow-deep);font-weight:900}
+.progress-track{height:16px;margin-top:16px;background:rgba(255,255,255,.35);border-radius:999px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,#ffe36a,#ffae17);border-radius:999px;transition:width .45s ease}
+.muted,.save-note{color:var(--muted);font-size:13px}
+.save-note{margin:7px 0 0}
+
+textarea,input{
+  width:100%;border:1px solid rgba(255,255,255,.6);border-radius:16px;
+  background:rgba(255,255,255,.44);color:var(--ink);padding:13px;outline:none;backdrop-filter:blur(10px)
+}
+body.theme-night textarea,body.theme-night input{background:rgba(255,255,255,.1);color:#eef7ff}
+textarea{height:118px;resize:vertical;margin-top:10px}
+textarea:focus,input:focus{border-color:#7ed9fa;box-shadow:0 0 0 4px rgba(126,217,250,.18)}
+
+.round-button{
+  width:44px;height:44px;border:1px solid rgba(255,255,255,.62);border-radius:50%;
+  background:rgba(255,255,255,.34);color:var(--ink);font-size:23px;backdrop-filter:blur(12px)
+}
+body.theme-night .round-button{color:#eef7ff}
+
+.calendar-head{display:flex;justify-content:space-between;align-items:center}
+.weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.weekdays{margin:17px 0 7px;text-align:center;color:var(--muted);font-size:12px;font-weight:900}
+.calendar-day{
+  position:relative;min-height:74px;padding:7px;border:1px solid rgba(255,255,255,.5);
+  border-radius:15px;background:rgba(255,255,255,.34);color:var(--ink);text-align:left
+}
+body.theme-night .calendar-day{color:#eef7ff;background:rgba(255,255,255,.08)}
+.calendar-day.is-empty{background:transparent;border-color:transparent}
+.calendar-day.is-today{outline:2px solid rgba(255,191,47,.78)}
+.calendar-day.has-record::after{content:"";position:absolute;right:8px;bottom:8px;width:9px;height:9px;border-radius:50%;background:var(--yellow)}
+.calendar-day .minutes{display:block;margin-top:8px;color:#158bb8;font-size:11px}
+body.theme-night .calendar-day .minutes{color:#9ce7ff}
+
+canvas{display:block;width:100%;height:auto;margin-top:12px}
+.settings-card label,.dialog-card label{display:grid;gap:8px;font-weight:800}
+hr{border:0;border-top:1px solid rgba(255,255,255,.4);margin:22px 0}
+.file-label{
+  display:block;text-align:center;margin-top:10px;padding:12px;border:1px solid rgba(255,255,255,.62);
+  border-radius:999px;background:rgba(255,255,255,.34);font-weight:900;backdrop-filter:blur(12px)
+}
+.file-label input{display:none}
+
+.day-dialog{border:0;padding:0;background:transparent}
+.day-dialog::backdrop{background:rgba(18,49,66,.45);backdrop-filter:blur(4px)}
+.dialog-card{
+  position:relative;width:min(520px,calc(100vw - 28px));padding:24px;
+  background:rgba(248,253,255,.92);border:1px solid rgba(255,255,255,.75);
+  border-radius:26px;box-shadow:0 24px 70px rgba(20,47,55,.28);backdrop-filter:blur(20px)
+}
+.dialog-card label{margin-top:14px}
+.dialog-close{position:absolute;top:13px;right:13px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(110,190,220,.25);color:var(--ink);font-size:22px}
+
+.toast{
+  position:fixed;left:50%;bottom:24px;z-index:20;transform:translate(-50%,18px);
+  padding:11px 17px;border-radius:999px;background:rgba(31,81,106,.88);color:white;
+  opacity:0;pointer-events:none;transition:.25s;white-space:nowrap;backdrop-filter:blur(12px)
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:560px){
+  .app{width:calc(100% - 18px);padding-top:14px}
+  .tabs{gap:3px}.tab{font-size:12px;padding:10px 2px}
+  .card{padding:18px;border-radius:23px}
+  .today-total{font-size:58px}
+  .summary-grid{gap:9px}
+  .mini-card strong{font-size:21px}
+  .calendar-day{min-height:62px;font-size:12px;padding:5px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+
+/* v2: 夜でも見やすい、明るめのガラスカード */
+body.theme-night{
+  --ink:#173f5a;
+  --muted:#55758a;
+  --card:rgba(238,248,255,.84);
+  --card-strong:rgba(246,252,255,.92);
+  --line:rgba(255,255,255,.78);
+  --shadow:0 16px 40px rgba(2,19,55,.28)
+}
+body.theme-night .hero{
+  color:#f5fbff;
+}
+body.theme-night .tabs{
+  background:rgba(222,240,255,.46);
+  border-color:rgba(255,255,255,.55)
+}
+body.theme-night .tab{
+  color:#244d68;
+  background:rgba(240,249,255,.34)
+}
+body.theme-night .tab.is-active{
+  color:#176f9b;
+  background:rgba(255,255,255,.83)
+}
+body.theme-night .card{
+  background:rgba(240,249,255,.84);
+  color:#173f5a;
+  border-color:rgba(255,255,255,.72)
+}
+body.theme-night .small-label,
+body.theme-night .muted,
+body.theme-night .save-note{
+  color:#58788d
+}
+body.theme-night .timer{
+  color:#176f9b;
+  background:rgba(220,244,255,.72);
+  border-color:rgba(255,255,255,.82)
+}
+body.theme-night .pale,
+body.theme-night .quick-add button,
+body.theme-night .round-button{
+  color:#244d68;
+  background:rgba(235,248,255,.68)
+}
+body.theme-night textarea,
+body.theme-night input{
+  background:rgba(255,255,255,.82);
+  color:#183f57;
+  border-color:rgba(66,130,160,.22)
+}
+body.theme-night .calendar-day{
+  color:#183f57;
+  background:rgba(246,252,255,.76);
+  border-color:rgba(255,255,255,.8)
+}
+body.theme-night .calendar-day .minutes{
+  color:#137da9
+}
+body.theme-night .weekdays{
+  color:#d9ecf8
+}
+body.theme-night .badge{
+  background:rgba(255,239,177,.88);
+  color:#b36d00
+}
+
+/* 日別記録ダイアログは常に濃い文字 */
+.day-dialog .dialog-card,
+.day-dialog .dialog-card label,
+.day-dialog .dialog-card h2,
+.day-dialog .dialog-card .small-label{
+  color:#173f5a
+}
+.day-dialog textarea,
+.day-dialog input{
+  color:#173f5a !important;
+  background:#fffef9 !important
+}
+
+/* 時間調整と達成マーク */
+.minus-button{
+  background:rgba(255,170,184,.48)!important;
+  color:#9e425b!important
+}
+.daily-progress{
+  background:linear-gradient(90deg,#71dcbd,#34b98a)
+}
+.calendar-day.is-achieved::before{
+  content:"✓";
+  position:absolute;
+  right:6px;
+  top:5px;
+  width:20px;
+  height:20px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#42bd8c;
+  color:white;
+  font-size:13px;
+  font-weight:900;
+  box-shadow:0 3px 8px rgba(43,155,114,.25)
+}
+
+
+/* v3: 手動時間入力と時間・分の目標設定 */
+.manual-entry-area{
+  margin-top:14px
+}
+.glass-button{
+  background:rgba(255,255,255,.42);
+  color:var(--ink);
+  border:1px solid rgba(255,255,255,.68);
+  backdrop-filter:blur(12px)
+}
+body.theme-night .glass-button{
+  background:rgba(235,248,255,.68);
+  color:#244d68
+}
+.time-input-row{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-top:10px
+}
+.time-input-row.three{
+  grid-template-columns:repeat(3,minmax(0,1fr))
+}
+.time-input-row label{
+  display:grid;
+  gap:6px;
+  text-align:left
+}
+.time-input-row label span{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:900
+}
+.setting-title{
+  display:block;
+  font-weight:900;
+  margin-bottom:6px
+}
+.goal-setting-block + .goal-setting-block{
+  margin-top:10px
+}
+@media(max-width:480px){
+  .time-input-row.three{
+    gap:7px
+  }
+  .time-input-row.three input{
+    padding:11px 8px
+  }
+}
+
+
+/* v4: ヘッダー簡素化、目標・叶えたいこと欄、夜の曜日表示改善 */
+.hero{
+  align-items:flex-start
+}
+.hero > div{
+  padding-top:2px
+}
+.hero .subtitle{
+  display:none!important
+}
+body.theme-night .weekdays{
+  color:#ffffff;
+  text-shadow:0 2px 8px rgba(0,0,35,.35)
+}
+body.theme-night .weekdays span{
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;
+  padding:5px 0
+}
+.wishes-card{
+  background:rgba(255,255,255,.8)
+}
+.wishes-display{
+  margin-top:14px;
+  min-height:72px;
+  white-space:pre-wrap;
+  line-height:1.8;
+  padding:16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.4);
+  border:1px solid rgba(255,255,255,.58);
+  color:var(--ink)
+}
+.wishes-display.is-empty{
+  color:var(--muted)
+}
+.wishes-input,
+.wishes-actions{
+  display:none
+}
+.wishes-card.is-editing .wishes-display{
+  display:none
+}
+.wishes-card.is-editing .wishes-input{
+  display:block
+}
+.wishes-card.is-editing .wishes-actions{
+  display:flex;
+  gap:10px;
+  margin-top:10px
+}
+.edit-wishes-button{
+  flex:0 0 auto
+}
+body.theme-night .wishes-card{
+  background:rgba(240,249,255,.88)
+}
+body.theme-night .wishes-display{
+  background:rgba(255,255,255,.72);
+  color:#173f5a;
+  border-color:rgba(255,255,255,.82)
+}
+
+
+
+
+/* v7: アプリ風ブラッシュアップ */
+:root{
+  --app-max:720px;
+  --radius-xl:30px;
+  --radius-lg:24px;
+  --radius-md:18px;
+  --space-1:8px;
+  --space-2:12px;
+  --space-3:16px;
+  --space-4:20px;
+  --space-5:24px;
+}
+body{
+  padding-bottom:110px
+}
+.app{
+  width:min(var(--app-max),calc(100% - 20px));
+  padding:20px 0 120px
+}
+.summer-ribbon{
+  width:82px;
+  height:5px;
+  margin:0 auto 8px;
+  border-radius:999px;
+  background:linear-gradient(90deg,rgba(255,255,255,.28),rgba(255,255,255,.92),rgba(255,255,255,.28));
+  box-shadow:0 2px 10px rgba(255,255,255,.25)
+}
+.hero{
+  padding:10px 8px 14px
+}
+.hero h1{
+  line-height:1.1;
+  letter-spacing:.015em
+}
+.brand{
+  opacity:.95
+}
+.card{
+  border-radius:var(--radius-xl);
+  padding:var(--space-5);
+  margin-top:var(--space-4);
+  box-shadow:0 18px 44px rgba(31,113,151,.16)
+}
+.timer-card{
+  padding-top:28px
+}
+.today-total{
+  margin:14px 0 8px
+}
+.timer{
+  margin:18px 0;
+  min-height:62px;
+  display:grid;
+  place-items:center
+}
+.timer-actions{
+  gap:12px
+}
+.timer-actions .button{
+  min-width:112px
+}
+.button,
+.quick-add button,
+.round-button,
+.file-label,
+.history-toggle,
+.history-delete{
+  min-height:44px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 18px rgba(33,118,157,.10)
+}
+.button:active,
+.quick-add button:active,
+.round-button:active{
+  transform:translateY(1px) scale(.99)
+}
+.summary-grid{
+  gap:12px
+}
+.mini-card{
+  padding:20px 16px
+}
+.mini-card strong{
+  margin-top:10px
+}
+.progress-track{
+  height:18px;
+  box-shadow:inset 0 1px 4px rgba(34,91,116,.10)
+}
+.wishes-display{
+  min-height:88px
+}
+textarea{
+  line-height:1.65
+}
+.calendar-grid{
+  gap:7px
+}
+.calendar-day{
+  transition:transform .16s ease,background .16s ease
+}
+.calendar-day:active{
+  transform:scale(.97)
+}
+.day-dialog .dialog-card{
+  border-radius:28px
+}
+.bottom-nav{
+  position:fixed;
+  left:50%;
+  bottom:max(14px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:50;
+  width:min(560px,calc(100% - 24px));
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  padding:9px;
+  border-radius:26px;
+  background:rgba(245,252,255,.72);
+  border:1px solid rgba(255,255,255,.78);
+  box-shadow:0 18px 45px rgba(15,80,114,.24);
+  backdrop-filter:blur(22px) saturate(140%)
+}
+.bottom-nav .tab{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  min-height:58px;
+  border:1px solid transparent;
+  border-radius:18px;
+  padding:7px 4px;
+  background:transparent;
+  color:#52768a;
+  font-weight:900
+}
+.bottom-nav .tab.is-active{
+  color:#167fab;
+  background:rgba(255,255,255,.82);
+  border-color:rgba(255,255,255,.9);
+  box-shadow:0 8px 20px rgba(52,145,183,.18)
+}
+.nav-icon{
+  font-size:22px;
+  line-height:1
+}
+.nav-label{
+  font-size:11px;
+  line-height:1
+}
+body.theme-night .bottom-nav{
+  background:rgba(222,240,255,.78);
+  border-color:rgba(255,255,255,.74)
+}
+body.theme-night .bottom-nav .tab{
+  color:#4d6f84;
+  background:transparent
+}
+body.theme-night .bottom-nav .tab.is-active{
+  color:#125f88;
+  background:rgba(255,255,255,.86)
+}
+.view{
+  animation:viewFade .22s ease
+}
+@keyframes viewFade{
+  from{opacity:.35;transform:translateY(4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(max-width:560px){
+  .app{
+    width:calc(100% - 16px);
+    padding-top:12px
+  }
+  .card{
+    padding:20px;
+    margin-top:14px;
+    border-radius:24px
+  }
+  .timer-actions .button{
+    min-width:94px;
+    padding-inline:15px
+  }
+  .bottom-nav{
+    width:calc(100% - 16px);
+    bottom:max(8px,env(safe-area-inset-bottom));
+    border-radius:22px
+  }
+}
+
+/* v8: 今日の唱題時間の枠を廃止 */
+body.theme-night .timer{
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+
+/* v9: 最終ブラッシュアップ */
+
+/* 今日の唱題を主役に */
+.today-total{
+  font-size:clamp(72px,16vw,104px);
+  line-height:.95;
+  margin:18px 0 8px;
+  letter-spacing:-.03em;
+  text-shadow:0 8px 18px rgba(240,154,0,.12)
+}
+.today-total small{
+  font-size:22px;
+  margin-left:6px;
+  letter-spacing:0
+}
+.timer-card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.84),rgba(255,255,255,.66));
+  border-color:rgba(255,255,255,.86)
+}
+body.theme-night .timer-card{
+  background:
+    linear-gradient(180deg,rgba(247,252,255,.92),rgba(225,243,255,.84))
+}
+
+/* 今日の目標と月間目標を統一 */
+#homeView > .card:not(.timer-card):not(.wishes-card):not(:last-child){
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.62))
+}
+#homeView > .card .section-heading h2{
+  font-size:24px;
+  margin-top:4px
+}
+#dailyGoalStatus,
+#goalPercent{
+  min-width:72px;
+  text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5)
+}
+.daily-progress,
+#progressBar{
+  box-shadow:0 4px 12px rgba(255,175,23,.18)
+}
+
+/* 今祈っていることを、やさしい付箋風ガラスカードに */
+.wishes-card{
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.88),rgba(255,250,218,.66));
+  border-color:rgba(255,255,255,.9)
+}
+.wishes-card::before{
+  content:"";
+  position:absolute;
+  width:140px;
+  height:140px;
+  right:-52px;
+  top:-58px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,226,114,.38),rgba(255,226,114,0) 72%);
+  pointer-events:none
+}
+.wishes-card::after{
+  content:"";
+  position:absolute;
+  left:26px;
+  right:26px;
+  bottom:16px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(89,162,187,.22),transparent)
+}
+.wishes-display{
+  position:relative;
+  z-index:1;
+  font-size:16px;
+  line-height:1.9;
+  background:rgba(255,255,255,.38);
+  border:1px solid rgba(255,255,255,.66);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6)
+}
+body.theme-night .wishes-card{
+  background:
+    linear-gradient(145deg,rgba(244,251,255,.94),rgba(222,239,255,.86))
+}
+
+/* 雲の動きをよりゆっくり自然に */
+.cloud{
+  opacity:.72;
+  animation-timing-function:linear;
+  will-change:transform;
+  filter:blur(.3px) drop-shadow(0 8px 14px rgba(36,86,111,.07))
+}
+.cloud-1{
+  animation-duration:72s
+}
+.cloud-2{
+  animation-duration:96s;
+  animation-delay:-28s
+}
+.cloud-3{
+  animation-duration:84s;
+  animation-delay:-47s
+}
+@keyframes cloudDrift{
+  from{transform:translateX(0) translateY(0)}
+  25%{transform:translateX(calc((100vw + 330px)*.25)) translateY(-6px)}
+  50%{transform:translateX(calc((100vw + 330px)*.5)) translateY(2px)}
+  75%{transform:translateX(calc((100vw + 330px)*.75)) translateY(-4px)}
+  to{transform:translateX(calc(100vw + 330px)) translateY(0)}
+}
+
+/* カード全体の統一感 */
+.card{
+  box-shadow:
+    0 18px 44px rgba(31,113,151,.14),
+    inset 0 1px 0 rgba(255,255,255,.52)
+}
+.small-label{
+  letter-spacing:.1em
+}
+.section-heading{
+  align-items:flex-start
+}
+
+@media(max-width:560px){
+  .today-total{
+    font-size:clamp(66px,20vw,88px)
+  }
+  .wishes-display{
+    font-size:15px
+  }
+}
+
+/* v10 */
+.today-total,
+.today-total-button{
+  background:transparent!important;
+  border:none!important;
+  box-shadow:none!important;
+  outline:none!important;
+}
+
+
+/* v11: アプリ仕上げ */
+
+/* 起動画面 */
+.launch-screen{
+  position:fixed;
+  inset:0;
+  z-index:999;
+  display:grid;
+  place-content:center;
+  justify-items:center;
+  gap:10px;
+  background:linear-gradient(180deg,#59c9f2,#bcecff 68%,#fff5bf);
+  color:white;
+  text-align:center;
+  transition:opacity .5s ease,visibility .5s ease;
+}
+.launch-screen.is-hidden{
+  opacity:0;
+  visibility:hidden;
+}
+.launch-screen p{
+  margin:10px 0 0;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.16em;
+}
+.launch-screen strong{
+  font-size:26px;
+  letter-spacing:.03em;
+}
+.launch-mark{
+  position:relative;
+  width:92px;
+  height:92px;
+  border-radius:28px;
+  background:rgba(255,255,255,.3);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 18px 40px rgba(35,117,151,.2);
+  overflow:hidden;
+}
+.launch-sun{
+  position:absolute;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:#ffe36b;
+  top:16px;
+  right:16px;
+  box-shadow:0 0 0 8px rgba(255,227,107,.14);
+}
+.launch-wave{
+  position:absolute;
+  left:-12px;
+  width:118px;
+  height:44px;
+  border-radius:50%;
+  background:rgba(255,255,255,.66);
+}
+.launch-wave-1{bottom:-10px}
+.launch-wave-2{bottom:-24px;opacity:.6}
+
+/* 今日の唱題を数字だけで主役に */
+.timer-card{
+  background:transparent!important;
+  border:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  padding-top:18px;
+  padding-bottom:12px;
+}
+.timer-card .small-label{
+  color:rgba(255,255,255,.95);
+  text-shadow:0 2px 10px rgba(28,92,122,.22);
+}
+body.theme-night .timer-card .small-label{
+  color:#eef8ff;
+}
+.today-total,
+.today-total-button{
+  display:inline-flex;
+  align-items:flex-end;
+  justify-content:center;
+  background:transparent!important;
+  border:none!important;
+  box-shadow:none!important;
+  outline:none!important;
+  color:white;
+  text-shadow:0 8px 24px rgba(24,92,125,.28);
+}
+body.theme-evening .today-total,
+body.theme-night .today-total{
+  color:#ffffff;
+}
+.today-total small{
+  color:rgba(255,255,255,.9);
+}
+.timer{
+  color:rgba(255,255,255,.96)!important;
+  text-shadow:0 3px 14px rgba(25,80,110,.25);
+}
+
+/* 丸いフローティング風タイマーボタン */
+.timer-actions{
+  margin-top:18px;
+  gap:18px;
+}
+.timer-circle{
+  width:88px;
+  height:88px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.7);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  color:white;
+  backdrop-filter:blur(18px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.46),
+    0 14px 28px rgba(31,113,151,.2);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.timer-circle:hover{transform:translateY(-3px)}
+.timer-circle:active{transform:translateY(1px) scale(.98)}
+.timer-circle-icon{
+  font-size:24px;
+  line-height:1;
+}
+.timer-circle-label{
+  font-size:11px;
+  font-weight:900;
+}
+.timer-start{background:rgba(255,190,47,.76)}
+.timer-pause{background:rgba(77,190,229,.64)}
+.timer-stop{background:rgba(255,130,159,.68)}
+body.theme-night .timer-start{background:rgba(255,194,72,.72)}
+body.theme-night .timer-pause{background:rgba(80,170,220,.66)}
+body.theme-night .timer-stop{background:rgba(226,120,157,.68)}
+
+/* 手動入力ボタン */
+.manual-entry-area .glass-button{
+  max-width:360px;
+  margin-inline:auto;
+  background:rgba(255,255,255,.34);
+  color:white;
+  border-color:rgba(255,255,255,.68);
+  text-shadow:0 2px 8px rgba(27,88,117,.18);
+}
+body.theme-night .manual-entry-area .glass-button{
+  color:white;
+  background:rgba(255,255,255,.15);
+}
+
+/* 時間帯別の空 */
+body{
+  background:
+    linear-gradient(180deg,#4ec7f3 0%,#aee9ff 58%,#fff4bd 100%);
+}
+body.theme-evening{
+  background:
+    linear-gradient(180deg,#ff9678 0%,#ffc9a0 48%,#ffe7bb 100%);
+}
+body.theme-night{
+  background:
+    radial-gradient(circle at 18% 12%,rgba(255,255,255,.12),transparent 25%),
+    linear-gradient(180deg,#0f2a5d 0%,#24477d 56%,#5f78a8 100%);
+}
+body.theme-night::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.82) 0 1px,transparent 1.7px),
+    radial-gradient(circle,rgba(255,245,180,.7) 0 1px,transparent 1.5px);
+  background-size:72px 72px,110px 110px;
+  background-position:12px 16px,48px 36px;
+  opacity:.32;
+  z-index:0;
+}
+
+/* 祈りカードを高級感あるガラスへ */
+.wishes-card{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,255,255,.56));
+  border:1px solid rgba(255,255,255,.82);
+  box-shadow:
+    0 20px 44px rgba(31,113,151,.16),
+    inset 0 1px 0 rgba(255,255,255,.72);
+}
+.wishes-display{
+  background:rgba(255,255,255,.3);
+  border-color:rgba(255,255,255,.66);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.66),
+    0 8px 18px rgba(48,123,155,.06);
+}
+body.theme-night .wishes-card{
+  background:
+    linear-gradient(145deg,rgba(242,249,255,.92),rgba(219,237,255,.76));
+}
+
+/* iPhoneカレンダー風 */
+.weekdays{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.calendar-grid{
+  gap:8px;
+}
+.calendar-day{
+  min-height:78px;
+  border-radius:18px;
+  background:rgba(255,255,255,.58);
+  border:1px solid rgba(255,255,255,.74);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.62);
+}
+.calendar-day strong{
+  display:inline-grid;
+  place-items:center;
+  min-width:28px;
+  height:28px;
+  border-radius:50%;
+}
+.calendar-day.is-today strong{
+  background:#ffb52a;
+  color:white;
+}
+.calendar-day.is-today{
+  outline:none;
+}
+.calendar-day.has-record{
+  background:rgba(255,255,255,.72);
+}
+.calendar-day.is-achieved{
+  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(224,249,239,.8));
+}
+body.theme-night .calendar-day{
+  background:rgba(247,252,255,.82);
+}
+body.theme-night .calendar-day.is-achieved{
+  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(222,246,239,.88));
+}
+
+/* ホームカード全体の階層 */
+#homeView > .card:not(.timer-card),
+.summary-grid .card{
+  box-shadow:
+    0 18px 40px rgba(31,113,151,.13),
+    inset 0 1px 0 rgba(255,255,255,.62);
+}
+.bottom-nav{
+  box-shadow:
+    0 18px 48px rgba(15,80,114,.26),
+    inset 0 1px 0 rgba(255,255,255,.58);
+}
+
+/* 設定画面のテーマ切替をわかりやすく */
+#themeMode{
+  appearance:none;
+  background-image:
+    linear-gradient(45deg,transparent 50%,#4e7488 50%),
+    linear-gradient(135deg,#4e7488 50%,transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 2px),
+    calc(100% - 13px) calc(50% - 2px);
+  background-size:5px 5px,5px 5px;
+  background-repeat:no-repeat;
+  padding-right:38px;
+}
+
+/* 小画面最適化 */
+@media(max-width:560px){
+  .timer-circle{
+    width:78px;
+    height:78px;
+  }
+  .timer-circle-icon{
+    font-size:21px;
+  }
+  .calendar-day{
+    min-height:68px;
+  }
+}
+
+.site-footer{
+  position:relative;
+  z-index:2;
+  width:min(720px,calc(100% - 24px));
+  margin:0 auto 100px;
+  text-align:center;
+  font-size:12px
+}
+.site-footer a{
+  color:rgba(255,255,255,.92);
+  text-decoration:none;
+  text-shadow:0 2px 8px rgba(20,70,100,.2)
+}
+.site-footer a:hover{text-decoration:underline}

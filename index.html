@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#6aa7b8" />
+  <meta name="description" content="Tokyo Ikeda Kayokai デジタル唱題帳。唱題時間、目標、メモを端末内に記録できます。" />
+  <title>デジタル唱題帳 | Tokyo Ikeda Kayokai</title>
+  <meta property="og:title" content="デジタル唱題帳 | Tokyo Ikeda Kayokai" />
+  <meta property="og:description" content="唱題時間、目標、メモを端末内に記録できるデジタル唱題帳です。" />
+  <meta property="og:type" content="website" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <div id="launchScreen" class="launch-screen" aria-hidden="true">
+    <div class="launch-mark">
+      <span class="launch-sun"></span>
+      <span class="launch-wave launch-wave-1"></span>
+      <span class="launch-wave launch-wave-2"></span>
+    </div>
+    <p>Tokyo Ikeda Kayokai</p>
+    <strong>デジタル唱題帳</strong>
+  </div>
+
+  <div class="paper-texture" aria-hidden="true"></div>
+  <div class="sky-decor" aria-hidden="true">
+    <div class="cloud cloud-1">☁</div>
+    <div class="cloud cloud-2">☁</div>
+    <div class="cloud cloud-3">☁</div>
+    <div class="stars">
+      <span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span>
+    </div>
+  </div>
+
+  <main class="app">
+    <div class="summer-ribbon" aria-hidden="true"></div>
+    <header class="hero">
+      <div>
+        <p class="brand">Tokyo Ikeda Kayokai</p>
+        <h1>デジタル唱題帳</h1></div>
+      <button id="themeBtn" class="round-button" aria-label="背景テーマを切り替える">
+        <span class="hand-icon">◐</span>
+      </button>
+    </header>
+
+    <section id="homeView" class="view is-active">
+      <section class="card timer-card">
+        <p class="small-label">今日の唱題</p>
+        <button id="editTodayTotalBtn" class="today-total today-total-button" aria-label="今日の唱題時間を編集">
+          <span id="todayMinutes">0</span><small>分</small>
+        </button>
+        <div id="timerDisplay" class="timer">00:00:00</div>
+
+        <div class="timer-actions">
+          <button id="startBtn" class="timer-circle timer-start" aria-label="タイマー開始">
+            <span class="timer-circle-icon">▶</span>
+            <span class="timer-circle-label">開始</span>
+          </button>
+          <button id="pauseBtn" class="timer-circle timer-pause" aria-label="タイマー一時停止">
+            <span class="timer-circle-icon">Ⅱ</span>
+            <span class="timer-circle-label">一時停止</span>
+          </button>
+          <button id="stopBtn" class="timer-circle timer-stop" aria-label="タイマー終了">
+            <span class="timer-circle-icon">■</span>
+            <span class="timer-circle-label">終了</span>
+          </button>
+        </div>
+
+        <div class="manual-entry-area">
+          <button id="openManualEntryBtn" class="button glass-button full">時間を手動入力</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="small-label">今日の目標</p>
+            <h2><span id="dailyGoalLabel">30分</span></h2>
+          </div>
+          <span id="dailyGoalStatus" class="badge">あと30分</span>
+        </div>
+        <div class="progress-track">
+          <div id="dailyProgressBar" class="progress-bar daily-progress"></div>
+        </div>
+        <p class="muted">達成すると、カレンダーにチェックがつきます。</p>
+      </section>
+
+      <section class="card wishes-card">
+        <div class="section-heading">
+          <div>
+            <p class="small-label">目標・叶えたいこと</p>
+            <h2>今、祈っていること</h2>
+          </div>
+          <button id="editWishesBtn" class="round-button edit-wishes-button" aria-label="目標・叶えたいことを編集">✎</button>
+        </div>
+        <div id="wishesDisplay" class="wishes-display">タップして目標や叶えたいことを記入できます。</div>
+        <textarea id="wishesInput" class="wishes-input" placeholder="今祈っていること、叶えたいこと、目標など"></textarea>
+        <div id="wishesActions" class="wishes-actions">
+          <button id="saveWishesBtn" class="button primary">保存</button>
+          <button id="cancelWishesBtn" class="button pale">キャンセル</button>
+        </div>
+      </section>
+
+      <section class="summary-grid">
+        <article class="card mini-card">
+          <span>今月の累計</span>
+          <strong><span id="monthTotal">0</span>分</strong>
+        </article>
+        <article class="card mini-card">
+          <span>連続記録</span>
+          <strong><span class="flame-mark" aria-hidden="true"></span><span id="streakDays">0</span>日</strong>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="small-label">月間目標</p>
+            <h2><span id="goalMinutesLabel">30時間</span></h2>
+          </div>
+          <span id="goalPercent" class="badge">0%</span>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        <p class="muted">あと <strong id="remainingMinutes">1800</strong>分で達成です。</p>
+      </section>
+
+      <section class="card">
+        <p class="small-label">今日のメモ</p>
+        <textarea id="memo" placeholder="祈ったこと、決意、気づきなど"></textarea>
+        <p class="save-note">入力内容は日付ごとに自動保存されます。</p>
+      </section>
+    </section>
+
+    <section id="calendarView" class="view">
+      <section class="card">
+        <div class="calendar-head">
+          <button id="prevMonth" class="round-button" aria-label="前の月">‹</button>
+          <h2 id="calendarTitle"></h2>
+          <button id="nextMonth" class="round-button" aria-label="次の月">›</button>
+        </div>
+        <div class="weekdays">
+          <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
+        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
+        <p class="muted">日付をタップすると、唱題時間とメモを確認・編集できます。</p>
+      </section>
+    </section>
+
+    <section id="recordsView" class="view">
+      <section class="card">
+        <p class="small-label">最近7日間</p>
+        <h2>唱題時間の記録</h2>
+        <canvas id="weeklyChart" width="700" height="360"></canvas>
+      </section>
+      <section class="summary-grid">
+        <article class="card mini-card">
+          <span>総唱題時間</span>
+          <strong><span id="allTimeTotal">0</span>分</strong>
+        </article>
+        <article class="card mini-card">
+          <span>記録した日</span>
+          <strong><span id="activeDays">0</span>日</strong>
+        </article>
+      </section>
+    </section>
+
+    <section id="settingsView" class="view">
+      <section class="card settings-card">
+        <div class="goal-setting-block">
+          <span class="setting-title">毎日の目標</span>
+          <div class="time-input-row">
+            <label><span>時間</span><input id="dailyGoalHoursInput" type="number" min="0" step="1" /></label>
+            <label><span>分</span><input id="dailyGoalMinutesInput" type="number" min="0" max="59" step="1" /></label>
+          </div>
+          <button id="saveDailyGoalBtn" class="button primary full">毎日の目標を保存</button>
+        </div>
+
+        <hr />
+
+        <div class="goal-setting-block">
+          <span class="setting-title">月間目標</span>
+          <div class="time-input-row">
+            <label><span>時間</span><input id="goalHoursInput" type="number" min="0" step="1" /></label>
+            <label><span>分</span><input id="goalMinutesInput" type="number" min="0" max="59" step="1" /></label>
+          </div>
+          <button id="saveGoalBtn" class="button primary full">月間目標を保存</button>
+        </div>
+
+        <hr />
+
+        <button id="installBtn" class="button pale full" hidden>ホーム画面に追加</button>
+        <button id="exportBtn" class="button pale full">記録をバックアップ</button>
+        <label class="file-label">
+          バックアップを読み込む
+          <input id="importInput" type="file" accept="application/json" />
+        </label>
+        <button id="resetBtn" class="button rose full">すべての記録をリセット</button>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="dayDialog" class="day-dialog">
+    <form method="dialog" class="dialog-card">
+      <button class="dialog-close" value="cancel" aria-label="閉じる">×</button>
+      <p class="small-label">日別記録</p>
+      <h2 id="dialogDateTitle"></h2>
+      <label>
+        <span>唱題時間（分）</span>
+        <input id="dialogMinutes" type="number" min="0" step="1" />
+      </label>
+      <label>
+        <span>メモ</span>
+        <textarea id="dialogMemo" placeholder="その日の祈りや決意"></textarea>
+      </label>
+      <button id="saveDayBtn" type="button" class="button primary full">保存する</button>
+    </form>
+  </dialog>
+
+
+
+  <dialog id="editTodayDialog" class="day-dialog">
+    <form method="dialog" class="dialog-card">
+      <button class="dialog-close" value="cancel" aria-label="閉じる">×</button>
+      <p class="small-label">今日の記録を編集</p>
+      <h2>合計時間を修正</h2>
+      <div class="time-input-row three">
+        <label>
+          <span>時間</span>
+          <input id="editTodayHours" type="number" min="0" step="1" value="0" />
+        </label>
+        <label>
+          <span>分</span>
+          <input id="editTodayMinutes" type="number" min="0" max="59" step="1" value="0" />
+        </label>
+        <label>
+          <span>秒</span>
+          <input id="editTodaySeconds" type="number" min="0" max="59" step="1" value="0" />
+        </label>
+      </div>
+      <p class="muted">保存すると、今日の合計時間がこの内容に置き換わります。</p>
+      <button id="saveTodayTotalBtn" type="button" class="button primary full">合計時間を保存</button>
+    </form>
+  </dialog>
+
+  <dialog id="manualEntryDialog" class="day-dialog">
+    <form method="dialog" class="dialog-card">
+      <button class="dialog-close" value="cancel" aria-label="閉じる">×</button>
+      <p class="small-label">手動入力</p>
+      <h2>唱題時間を追加</h2>
+      <div class="time-input-row three">
+        <label>
+          <span>時間</span>
+          <input id="manualHours" type="number" min="0" step="1" value="0" />
+        </label>
+        <label>
+          <span>分</span>
+          <input id="manualMinutes" type="number" min="0" max="59" step="1" value="0" />
+        </label>
+        <label>
+          <span>秒</span>
+          <input id="manualSeconds" type="number" min="0" max="59" step="1" value="0" />
+        </label>
+      </div>
+      <button id="saveManualEntryBtn" type="button" class="button primary full">この時間を追加</button>
+    </form>
+  </dialog>
+
+
+  <footer class="site-footer"><a href="privacy.html">プライバシーについて</a></footer>
+
+  <nav class="bottom-nav" aria-label="画面切り替え">
+    <button class="tab is-active" data-view="home" aria-label="ホーム">
+      <span class="nav-icon" aria-hidden="true">⌂</span>
+      <span class="nav-label">ホーム</span>
+    </button>
+    <button class="tab" data-view="calendar" aria-label="カレンダー">
+      <span class="nav-icon" aria-hidden="true">□</span>
+      <span class="nav-label">カレンダー</span>
+    </button>
+    <button class="tab" data-view="records" aria-label="記録">
+      <span class="nav-icon" aria-hidden="true">⌁</span>
+      <span class="nav-label">記録</span>
+    </button>
+    <button class="tab" data-view="settings" aria-label="設定">
+      <span class="nav-icon" aria-hidden="true">⚙</span>
+      <span class="nav-label">設定</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

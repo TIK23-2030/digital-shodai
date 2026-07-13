@@ -1,0 +1,25 @@
+{
+  "name": "Tokyo Ikeda Kayokai デジタル唱題帳",
+  "short_name": "唱題帳",
+  "description": "唱題時間、目標、メモを端末内に記録できるデジタル唱題帳",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#59c9f2",
+  "theme_color": "#59c9f2",
+  "icons": [
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "scope": "./",
+  "categories": [
+    "lifestyle",
+    "productivity"
+  ],
+  "lang": "ja",
+  "id": "./"
+}
