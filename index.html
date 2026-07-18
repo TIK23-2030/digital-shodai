@@ -142,6 +142,9 @@
 
     <section id="calendarView" class="view">
       <section class="card">
+        <div class="calendar-list-toolbar">
+          <button id="openEntryListBtn" class="entry-list-link" type="button">入力内容一覧を見る</button>
+        </div>
         <div class="calendar-head">
           <button id="prevMonth" class="round-button" aria-label="前の月">‹</button>
           <h2 id="calendarTitle"></h2>
@@ -213,15 +216,34 @@
     </section>
   </main>
 
+
+  <dialog id="entryListDialog" class="day-dialog entry-list-dialog">
+    <section class="dialog-card entry-list-card">
+      <button id="closeEntryListBtn" class="dialog-close" type="button" aria-label="閉じる">×</button>
+      <p class="small-label">唱題の記録</p>
+      <div class="entry-list-title-row">
+        <h2>入力内容一覧</h2>
+        <select id="entryListOrder" aria-label="表示順">
+          <option value="newest">新しい順</option>
+          <option value="oldest">古い順</option>
+        </select>
+      </div>
+      <p class="muted entry-list-description">唱題時間とメモを、日付ごとに振り返れます。</p>
+      <div id="entryList" class="entry-list"></div>
+    </section>
+  </dialog>
+
   <dialog id="dayDialog" class="day-dialog">
     <form method="dialog" class="dialog-card">
       <button class="dialog-close" value="cancel" aria-label="閉じる">×</button>
       <p class="small-label">日別記録</p>
       <h2 id="dialogDateTitle"></h2>
-      <label>
-        <span>唱題時間（分）</span>
-        <input id="dialogMinutes" type="number" min="0" step="1" />
-      </label>
+      <div class="time-input-grid">
+        <label>
+          <span>唱題時間（分）</span>
+          <input id="dialogMinutes" type="number" min="0" step="1" />
+        </label>
+      </div>
       <label>
         <span>メモ</span>
         <textarea id="dialogMemo" placeholder="その日の祈りや決意"></textarea>
