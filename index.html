@@ -106,12 +106,18 @@
 
       <section class="summary-grid">
         <article class="card mini-card">
-          <span>今月の累計</span>
-          <strong><span id="monthTotal">0</span>分</strong>
+          <span class="mini-card-label">今月の累計</span>
+          <strong class="stat-value month-total-value">
+            <span class="stat-number" id="monthTotalHours">0</span><span class="stat-unit">時間</span>
+            <span class="stat-number" id="monthTotalMinutes">0</span><span class="stat-unit">分</span>
+          </strong>
         </article>
         <article class="card mini-card">
-          <span>連続記録</span>
-          <strong><span class="flame-mark" aria-hidden="true"></span><span id="streakDays">0</span>日</strong>
+          <span class="mini-card-label">連続記録</span>
+          <strong class="stat-value streak-value">
+            <span class="flame-mark" aria-hidden="true"></span>
+            <span class="stat-number" id="streakDays">0</span><span class="stat-unit">日</span>
+          </strong>
         </article>
       </section>
 
@@ -157,12 +163,17 @@
       </section>
       <section class="summary-grid">
         <article class="card mini-card">
-          <span>総唱題時間</span>
-          <strong><span id="allTimeTotal">0</span>分</strong>
+          <span class="mini-card-label">総唱題時間</span>
+          <strong class="stat-value record-total-value">
+            <span class="stat-number" id="allTimeHours">0</span><span class="stat-unit">時間</span>
+            <span class="stat-number" id="allTimeMinutes">0</span><span class="stat-unit">分</span>
+          </strong>
         </article>
         <article class="card mini-card">
-          <span>記録した日</span>
-          <strong><span id="activeDays">0</span>日</strong>
+          <span class="mini-card-label">記録した日</span>
+          <strong class="stat-value active-days-value">
+            <span class="stat-number" id="activeDays">0</span><span class="stat-unit">日</span>
+          </strong>
         </article>
       </section>
     </section>

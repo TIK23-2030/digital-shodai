@@ -133,8 +133,8 @@ body.theme-night .pale,body.theme-night .quick-add button{color:#eef7ff}
 
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .mini-card{text-align:center}
-.mini-card span{display:block;color:var(--muted);font-size:13px;font-weight:800}
-.mini-card strong{display:block;margin-top:8px;font-size:26px}
+.mini-card span{display:block;color:var(--muted);font-size:16px;font-weight:850;line-height:1.45}
+.mini-card strong{display:block;margin-top:10px;font-size:34px;line-height:1.15;letter-spacing:.01em}
 .flame-mark{
   display:inline-block!important;width:16px;height:22px;margin-right:7px;
   background:linear-gradient(#ffb13b,#ff6b5c);
@@ -208,7 +208,8 @@ hr{border:0;border-top:1px solid rgba(255,255,255,.4);margin:22px 0}
   .card{padding:18px;border-radius:23px}
   .today-total{font-size:58px}
   .summary-grid{gap:9px}
-  .mini-card strong{font-size:21px}
+  .mini-card span{font-size:15px}
+  .mini-card strong{font-size:29px}
   .calendar-day{min-height:62px;font-size:12px;padding:5px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -1084,3 +1085,77 @@ body.theme-night .calendar-day.is-achieved{
   text-shadow:0 2px 8px rgba(20,70,100,.2)
 }
 .site-footer a:hover{text-decoration:underline}
+
+
+/* v1.2: 月間累計・連続記録の横書き表示 */
+.mini-card .mini-card-label{
+  display:block;
+  color:var(--muted);
+  font-size:16px;
+  font-weight:850;
+  line-height:1.45;
+}
+.mini-card .stat-value{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  flex-wrap:nowrap;
+  gap:3px;
+  margin-top:10px;
+  line-height:1;
+  white-space:nowrap;
+}
+.mini-card .stat-number{
+  display:inline;
+  color:inherit;
+  font-size:34px;
+  font-weight:900;
+  line-height:1;
+}
+.mini-card .stat-unit{
+  display:inline;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:800;
+  line-height:1;
+  margin-right:3px;
+}
+.mini-card .flame-mark{
+  flex:0 0 auto;
+  align-self:center;
+  margin-right:4px;
+}
+@media(max-width:560px){
+  .mini-card .mini-card-label{font-size:15px}
+  .mini-card .stat-number{font-size:29px}
+  .mini-card .stat-unit{font-size:11px}
+  .mini-card .stat-value{gap:2px}
+}
+@media(max-width:370px){
+  .mini-card{padding-left:10px;padding-right:10px}
+  .mini-card .stat-number{font-size:25px}
+  .mini-card .stat-unit{font-size:10px;margin-right:1px}
+}
+
+
+/* v1.3: 記録ページの集計表示をホームと統一 */
+#recordsView .summary-grid .mini-card{
+  text-align:center;
+}
+#recordsView .record-total-value,
+#recordsView .active-days-value{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+}
+#recordsView .stat-unit{
+  font-size:13px;
+}
+@media(max-width:560px){
+  #recordsView .stat-unit{font-size:11px}
+}
+@media(max-width:370px){
+  #recordsView .stat-unit{font-size:10px}
+}

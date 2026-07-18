@@ -1,6 +1,6 @@
 const $ = id => document.getElementById(id);
 const STORAGE_KEY = "tokyoIkedaKayokaiDaimokuV1";
-const defaultState = { goalMinutes:1800, dailyGoalMinutes:30, wishes:"", recordSeconds:{}, entries:{}, records:{}, memos:{}, themeMode:"auto" };
+const defaultState = { goalMinutes:1800, dailyGoalMinutes:30, wishes:"", recordSeconds:{}, entries:{}, records:{}, memos:{}, themeMode:"auto", timerState:{ running:false, startedAt:null, accumulatedSeconds:0 } };
 let state = loadState();
 let seconds = 0;
 let timer = null;
@@ -83,11 +83,36 @@ function streak(){
   while(state.records[dateKey(d)]>0){n++;d.setDate(d.getDate()-1)}
   return n;
 }
+function ensureTimerState(){
+  state.timerState={
+    running:Boolean(state.timerState?.running),
+    startedAt:state.timerState?.startedAt||null,
+    accumulatedSeconds:Math.max(0,Number(state.timerState?.accumulatedSeconds)||0)
+  };
+}
+function currentTimerSeconds(){
+  ensureTimerState();
+  const base=state.timerState.accumulatedSeconds;
+  if(!state.timerState.running||!state.timerState.startedAt)return Math.floor(base);
+  const elapsed=Math.max(0,(Date.now()-Number(state.timerState.startedAt))/1000);
+  return Math.floor(base+elapsed);
+}
 function updateTimer(){
+  seconds=currentTimerSeconds();
   const h=String(Math.floor(seconds/3600)).padStart(2,"0");
   const m=String(Math.floor((seconds%3600)/60)).padStart(2,"0");
   const s=String(seconds%60).padStart(2,"0");
   $("timerDisplay").textContent=`${h}:${m}:${s}`;
+}
+function startTimerTicker(){
+  clearInterval(timer);
+  timer=setInterval(updateTimer,1000);
+  updateTimer();
+}
+function clearSavedTimer(){
+  ensureTimerState();
+  state.timerState={running:false,startedAt:null,accumulatedSeconds:0};
+  seconds=0;
 }
 async function addMinutes(minutes,key=dateKey()){
   minutes=Math.round(Number(minutes)||0);
@@ -115,13 +140,16 @@ function addManualTime(hours,minutes,seconds,key=dateKey()){
 function renderSummary(){
   const monthly=monthTotal(),progress=Math.min(monthly/state.goalMinutes*100,100);
   $("todayMinutes").textContent=state.records[dateKey()]||0;
-  $("monthTotal").textContent=monthly;
+  $("monthTotalHours").textContent=Math.floor(monthly/60);
+  $("monthTotalMinutes").textContent=monthly%60;
   $("streakDays").textContent=streak();
   $("goalMinutesLabel").textContent=formatGoalTime(state.goalMinutes);
   $("goalPercent").textContent=`${Math.round(progress)}%`;
   $("remainingMinutes").textContent=Math.max(state.goalMinutes-monthly,0);
   $("progressBar").style.width=`${progress}%`;
-  $("allTimeTotal").textContent=allTotal();
+  const lifetimeMinutes=allTotal();
+  $("allTimeHours").textContent=Math.floor(lifetimeMinutes/60);
+  $("allTimeMinutes").textContent=lifetimeMinutes%60;
   $("activeDays").textContent=Object.values(state.records).filter(v=>v>0).length;
   $("goalHoursInput").value=Math.floor(state.goalMinutes/60);
   $("goalMinutesInput").value=state.goalMinutes%60;
@@ -199,21 +227,41 @@ function toast(text){const t=$("toast");t.textContent=text;t.classList.add("show
 
 
 
-$("startBtn").onclick=()=>{if(timer)return;timer=setInterval(()=>{seconds++;updateTimer()},1000)};
-$("pauseBtn").onclick=()=>{clearInterval(timer);timer=null;toast("一時停止しました")};
-$("stopBtn").onclick=async()=>{
+$("startBtn").onclick=()=>{
+  ensureTimerState();
+  if(state.timerState.running)return;
+  state.timerState.running=true;
+  state.timerState.startedAt=Date.now();
+  saveState();
+  startTimerTicker();
+};
+$("pauseBtn").onclick=()=>{
+  ensureTimerState();
+  if(!state.timerState.running){toast("タイマーは一時停止中です");return;}
+  state.timerState.accumulatedSeconds=currentTimerSeconds();
+  state.timerState.running=false;
+  state.timerState.startedAt=null;
   clearInterval(timer);
   timer=null;
-  if(seconds>0){
-    addHistoryEntry(dateKey(),seconds,"timer");
+  saveState();
+  updateTimer();
+  toast("一時停止しました");
+};
+$("stopBtn").onclick=async()=>{
+  const totalSeconds=currentTimerSeconds();
+  clearInterval(timer);
+  timer=null;
+  clearSavedTimer();
+  if(totalSeconds>0){
+    addHistoryEntry(dateKey(),totalSeconds,"timer");
     rebuildDayFromEntries(dateKey());
     saveState();
     renderAll();
-    toast(`${formatSeconds(seconds)}を記録しました`);
+    toast(`${formatSeconds(totalSeconds)}を記録しました`);
   }else{
+    saveState();
     toast("時間が記録されていません");
   }
-  seconds=0;
   updateTimer();
 };
 
@@ -292,7 +340,7 @@ $("cancelWishesBtn").onclick=()=>{
 $("themeBtn").onclick=()=>{const a=["auto","day","evening","night"];state.themeMode=a[(a.indexOf(state.themeMode)+1)%a.length];saveState();applyTheme()};
 $("exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`daimoku-backup-${dateKey()}.json`;a.click();URL.revokeObjectURL(url)};
 $("importInput").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{state={...defaultState,...JSON.parse(await f.text())};saveState();renderAll();toast("バックアップを読み込みました")}catch{alert("読み込めませんでした")}e.target.value=""};
-$("resetBtn").onclick=()=>{if(!confirm("すべての記録とメモを削除しますか？"))return;state=structuredClone(defaultState);saveState();renderAll();toast("記録をリセットしました")};
+$("resetBtn").onclick=()=>{if(!confirm("すべての記録とメモを削除しますか？"))return;clearInterval(timer);timer=null;state=structuredClone(defaultState);saveState();updateTimer();renderAll();toast("記録をリセットしました")};
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("installBtn").hidden=false});
 $("installBtn").onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$("installBtn").hidden=true};
 window.addEventListener("resize",()=>{if($("recordsView").classList.contains("is-active"))renderChart()});
@@ -317,7 +365,15 @@ function migrateExistingRecordsToEntries(){
 }
 
 migrateExistingRecordsToEntries();
-updateTimer();renderAll();
+ensureTimerState();
+if(state.timerState.running)startTimerTicker();
+else updateTimer();
+renderAll();
+
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden)updateTimer();
+});
+window.addEventListener("pageshow",updateTimer);
 
 
 
