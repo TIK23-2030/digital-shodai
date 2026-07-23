@@ -478,10 +478,37 @@ if(state.timerState.running)startTimerTicker();
 else updateTimer();
 renderAll();
 
+function checkpointRunningTimer(){
+  ensureTimerState();
+  if(!state.timerState.running||!state.timerState.startedAt)return;
+  const now=Date.now();
+  const elapsed=Math.max(0,Math.floor((now-Number(state.timerState.startedAt))/1000));
+  if(elapsed>0){
+    state.timerState.accumulatedSeconds=Math.max(0,Number(state.timerState.accumulatedSeconds)||0)+elapsed;
+  }
+  state.timerState.startedAt=now;
+  saveState();
+}
+function resumeRunningTimer(){
+  checkpointRunningTimer();
+  if(state.timerState.running)startTimerTicker();
+  else updateTimer();
+}
+
 document.addEventListener("visibilitychange",()=>{
-  if(!document.hidden)updateTimer();
+  if(document.hidden){
+    checkpointRunningTimer();
+    clearInterval(timer);
+    timer=null;
+  }else{
+    resumeRunningTimer();
+  }
 });
-window.addEventListener("pageshow",updateTimer);
+window.addEventListener("pagehide",checkpointRunningTimer);
+window.addEventListener("pageshow",resumeRunningTimer);
+window.addEventListener("focus",resumeRunningTimer);
+document.addEventListener("freeze",checkpointRunningTimer);
+document.addEventListener("resume",resumeRunningTimer);
 
 
 

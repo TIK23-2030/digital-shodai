@@ -58,7 +58,7 @@ https://ユーザー名.github.io/リポジトリ名/
 Service Workerのキャッシュを更新したい場合は、`service-worker.js` 内の以下の値を変更します。
 
 ```js
-const CACHE_NAME = "digital-daimoku-v1.9.0";
+const CACHE_NAME = "digital-daimoku-v2.0.0";
 ```
 
 例：
@@ -130,3 +130,10 @@ v1.6.0
 - 秒のみの記録も、記録日数・連続記録には反映
 - カレンダーには1分未満の唱題時間を表示しない
 - カレンダーの日別編集は従来どおり分単位のみ
+
+
+## v2.0.0 の変更
+
+- iPhoneの画面ロック、PWAのバックグラウンド移行、Safariからの復帰時に、保存済みの開始時刻と現在時刻の差を確定加算するよう改善しました。
+- `visibilitychange`、`pagehide`、`pageshow`、`focus`、`freeze`、`resume` に対応し、休止中の経過時間が抜けにくい仕組みにしました。
+- 復帰時に基準時刻を更新することで、複数の復帰イベントが発生しても二重加算を防ぎます。
